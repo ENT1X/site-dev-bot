@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -25,7 +25,6 @@ ORDER_TYPES = {
 }
 
 
-@router.message(F.text == "📝 Заказать сайт")
 @router.message(Command("order"))
 async def cmd_order(message: Message, state: FSMContext):
     user = await get_user(message.from_user.id)
@@ -86,7 +85,6 @@ async def finish_order(message: Message, state: FSMContext, data: dict):
     await state.clear()
 
 
-@router.message(F.text == "📋 Мои заказы")
 @router.message(Command("orders"))
 async def cmd_orders(message: Message):
     orders = await get_user_orders(message.from_user.id)

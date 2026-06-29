@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -13,7 +13,6 @@ class FeedbackForm(StatesGroup):
     message_text = State()
 
 
-@router.message(F.text == "💬 Связь с нами")
 @router.message(Command("feedback"))
 async def cmd_feedback(message: Message, state: FSMContext):
     await message.answer(

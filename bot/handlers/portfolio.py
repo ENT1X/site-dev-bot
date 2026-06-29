@@ -1,5 +1,5 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram import Router
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import Command
 
 from bot.database import get_portfolio
@@ -8,7 +8,6 @@ from bot.keyboards import portfolio_inline, main_menu
 router = Router()
 
 
-@router.message(F.text == "📂 Портфолио")
 @router.message(Command("portfolio"))
 async def cmd_portfolio(message: Message):
     items = await get_portfolio()
