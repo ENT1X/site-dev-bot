@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 
-from bot.database import init_db, get_user, get_user_orders, get_portfolio
+from bot.database import init_db, seed_portfolio, get_user, get_user_orders, get_portfolio
 
 logging.basicConfig(level=logging.INFO)
 
@@ -39,6 +39,7 @@ async def run_bot():
 async def lifespan(application: FastAPI):
     global bot_task
     await init_db()
+    await seed_portfolio()
     if os.getenv("BOT_TOKEN"):
         bot_task = asyncio.create_task(run_bot())
     else:

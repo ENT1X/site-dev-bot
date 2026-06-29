@@ -91,3 +91,24 @@ async def get_portfolio():
         db.row_factory = aiosqlite.Row
         cursor = await db.execute("SELECT * FROM portfolio ORDER BY created_at DESC")
         return await cursor.fetchall()
+
+
+async def seed_portfolio():
+    async with aiosqlite.connect(DATABASE_PATH) as db:
+        cursor = await db.execute("SELECT COUNT(*) FROM portfolio")
+        count = (await cursor.fetchone())[0]
+        if count > 0:
+            return
+        items = [
+            ("Интернет-магазин «TrendShop»", "Модный интернет-магазин одежды с корзиной, фильтрами и онлайн-оплатой. Адаптивный дизайн, интеграция с CDEK.", "https://example.com/trendshop", "Интернет-магазин"),
+            ("Лендинг «SmartHome»", "Одностраничный сайт для компании по умным домам. Анимации, форма заявки, калькулятор стоимости.", "https://example.com/smarthome", "Лендинг"),
+            ("Корпоративный сайт «LawPrime»", "Сайт юридической компании с портфолио дел, блогом и личным кабинетом клиента.", "https://example.com/lawprime", "Корпоративный сайт"),
+            ("Веб-приложение «TaskFlow»", "Система управления задачами с канбан-доской, командной работой и уведомлениями в Telegram.", "https://example.com/taskflow", "Веб-приложение"),
+            ("Сайт-визитка «FotoArt»", "Портфолио фотографа с галереей, lightbox-просмотром и формой бронирования съёмок.", "https://example.com/fotoart", "Лендинг"),
+            ("CRM «BizControl»", "Облачная CRM для малого бизнеса: сделки, клиенты, аналитика, интеграция с WhatsApp.", None, "Веб-приложение"),
+        ]
+        await db.executemany(
+            "INSERT INTO portfolio (title, description, site_url, order_type) VALUES (?, ?, ?, ?)",
+            items,
+        )
+        await db.commit()
