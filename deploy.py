@@ -51,6 +51,11 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/webapp", StaticFiles(directory="webapp", html=True), name="webapp")
 
 
+@app.get("/api/health")
+async def api_health():
+    return {"status": "ok"}
+
+
 @app.get("/api/user/{telegram_id}")
 async def api_get_user(telegram_id: int):
     user = await get_user(telegram_id)
