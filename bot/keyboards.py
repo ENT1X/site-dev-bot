@@ -7,14 +7,15 @@ from bot.config import WEBAPP_URL
 
 
 def main_menu():
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="👤 Профиль"), KeyboardButton(text="📂 Портфолио")],
-            [KeyboardButton(text="📝 Заказать сайт"), KeyboardButton(text="💬 Связь с нами")],
-            [KeyboardButton(text="🌐 Mini App", web_app=WebAppInfo(url=WEBAPP_URL))],
-        ],
-        resize_keyboard=True,
-    )
+    buttons = [
+        [KeyboardButton(text="👤 Профиль"), KeyboardButton(text="📂 Портфолио")],
+        [KeyboardButton(text="📝 Заказать сайт"), KeyboardButton(text="💬 Связь с нами")],
+    ]
+    if WEBAPP_URL:
+        buttons.append([KeyboardButton(text="🌐 Mini App", web_app=WebAppInfo(url=WEBAPP_URL))])
+    else:
+        buttons.append([KeyboardButton(text="🌐 Mini App")])
+    return ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True)
 
 
 def mini_app_button():

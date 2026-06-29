@@ -24,11 +24,17 @@ bot_task: asyncio.Task | None = None
 
 async def start_bot():
     global bot, dp
-    bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dp = Dispatcher()
-    dp.include_routers(start.router, portfolio.router, orders.router, feedback.router)
-    await init_db()
-    await dp.start_polling(bot)
+    if not BOT_TOKEN:
+        logging.error("BOT_TOKEN not set")
+        return
+    try:
+        bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+        dp = Dispatcher()
+        dp.include_routers(start.router, portfolio.router, orders.router, feedback.router)
+        await init_db()
+        await dp.start_polling(bot)
+    except Exception as e:
+        logging.error(f"Bot failed to start: {e}")
 
 
 async def stop_bot():
