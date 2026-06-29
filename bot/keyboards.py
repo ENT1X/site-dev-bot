@@ -29,13 +29,12 @@ def mini_app_button():
     )
 
 
-def portfolio_inline(portfolio_id: int):
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="🔗 Смотреть сайт", url="https://example.com")],
-            [InlineKeyboardButton(text="📝 Заказать такой же", callback_data=f"order_same:{portfolio_id}")],
-        ]
-    )
+def portfolio_inline(portfolio_id: int, site_url: str | None = None):
+    buttons = []
+    if site_url:
+        buttons.append([InlineKeyboardButton(text="🔗 Смотреть сайт", url=site_url)])
+    buttons.append([InlineKeyboardButton(text="📝 Заказать такой же", callback_data=f"order_same:{portfolio_id}")])
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
 
 
 def contact_keyboard():

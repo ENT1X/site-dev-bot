@@ -24,17 +24,15 @@ async def cmd_portfolio(message: Message):
             f"{item['description'] or ''}\n"
             f"Тип: {item['order_type'] or 'не указан'}"
         )
+        kb = portfolio_inline(item['id'], item['site_url'])
         if item['image_url']:
             await message.answer_photo(
                 photo=item['image_url'],
                 caption=text,
-                reply_markup=portfolio_inline(item['id']),
+                reply_markup=kb,
             )
         else:
-            await message.answer(
-                text,
-                reply_markup=portfolio_inline(item['id']),
-            )
+            await message.answer(text, reply_markup=kb)
 
 
 @router.callback_query(F.data.startswith("order_same:"))
