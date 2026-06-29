@@ -1,4 +1,6 @@
 import os
+import sys
+import subprocess
 import logging
 
 from fastapi import FastAPI
@@ -13,10 +15,30 @@ app = FastAPI()
 
 app.mount("/webapp", StaticFiles(directory="webapp", html=True), name="webapp")
 
+bot_process = None
+
 
 @app.on_event("startup")
 async def startup():
+    global bot_process
     await init_db()
+    bot_token = os.getenv("BOT_TOKEN")
+    if bot_token:
+        logging.info("Starting bot process...")
+        bot_process = subprocess.Popen(
+            [sys.executable, "-m", "bot.main"],
+            env={**os.environ},
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    global bot_process
+    if bot_process:
+        bot_process.terminate()
+        bot_process.wait()
 
 
 @app.get("/api/health")
